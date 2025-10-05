@@ -9,5 +9,3 @@ app.use(jsonBodyMiddleware);
 
 app.use("/courses", getCoursesRoutes(db));
 app.use("/__test__", getTestsRouter(db));
-
-// соеденить jestconfig и tsconfig

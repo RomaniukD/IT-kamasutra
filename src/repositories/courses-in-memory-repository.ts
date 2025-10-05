@@ -1,9 +1,8 @@
 import type { DBType, CourseType } from '../db/db.js';
 
-
 export const coursesRepository = {
-
-    findCourses(title: string | null, DB: DBType) {
+    
+    async findCourses(title: string | null | undefined, DB: DBType):Promise<CourseType[]> {
         const DBCourses = DB.courses
         if (title) {
             return DBCourses.filter(p => p.title.includes(title));
@@ -12,28 +11,28 @@ export const coursesRepository = {
         }
     },
 
-    findCoursesById(id: number | null, DB: DBType) {
+    async findCoursesById(id: number | null, DB: DBType):Promise<CourseType | null> {
         return DB.courses.find(a => a.id === id) || null
     },
 
-    createCourse(title: string, DB: DBType) {
+    async createCourse(title: string, DB: DBType):Promise<CourseType | undefined> {
         const DBCourses = DB.courses
 
-        if (!title) {
-            return;
-        } else {
-            const createdProducts: CourseType = {
-                id: +(new Date()),
-                title: title,
-                studentsCount: 0
-            }
-            DBCourses.push(createdProducts);
-            return createdProducts;
+    if (!title) {
+        return;
+    } else {
+        const createdProducts: CourseType = {
+            id: +(new Date()),
+            title: title,
+            studentsCount: 0
         }
-
+        DBCourses.push(createdProducts);
+        return createdProducts;
+        }
+        
     },
 
-    deleteCourse(id: Number, DB: DBType) {
+    async deleteCourse(id: Number, DB: DBType):Promise<boolean> {
 
         const currentCourse = DB.courses.findIndex(c => c.id === id)
         if (isNaN(currentCourse)) {
@@ -45,7 +44,7 @@ export const coursesRepository = {
 
     },
 
-    updateCourse(id: Number, title: string, DB: DBType) {
+    async updateCourse(id: Number, title: string, DB: DBType):Promise<boolean> {
         let foundProduct = DB.courses.find(p => p.id === id)
         if (foundProduct) {
             foundProduct.title = title;
