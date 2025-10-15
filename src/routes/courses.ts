@@ -1,5 +1,5 @@
 import express, { type Response } from 'express';
-import {body} from 'express-validator';
+import {body, param} from 'express-validator';
 
 import type { RequestWithBody, RequestWithParams, RequestWithParamsAndBody, RequestWithQuery } from '../types.js';
 import type { CourseCreateModel } from '../models/CourseCreateModel.js';
@@ -8,18 +8,16 @@ import type { GetCourseQueryModel } from '../models/GetCourseQueryModel.js';
 import type { CourseViewModel } from '../models/CourseViewModel.js';
 import type { URIParamsCourseIdModel } from '../models/URIParamsCourseIdModel.js'
 import type { DBType, CourseType } from '../db/db.js';
-import { coursesRepository } from '../repositories/courses-in-memory-repository.js';
 import { inputMiddlaleware } from '../middleware/InputTitleMiddleware.js';
+import { coursesRepository } from '../repositories/courses-mongo-repository.js';
 
-const titleValidation = body('title').trim().isLength({min:3, max:20}).withMessage('title incorrect');
-
+const Validation = body('title').trim().isLength({min:3, max:20}).escape().withMessage('title incorrect')
 export const getCoursesRoutes = (db: DBType) => {
   const router = express.Router();
 
   router.get('/',  async (req: RequestWithQuery<GetCourseQueryModel>, res: Response<CourseViewModel[]>) => {
 
     const foundCourse: CourseType[] = await coursesRepository.findCourses(req.query.title, db);
-
     res.status(200).send(foundCourse);
   })
 
@@ -38,7 +36,7 @@ export const getCoursesRoutes = (db: DBType) => {
   })
 
   router.post('/', 
-    titleValidation,
+    Validation,
     inputMiddlaleware,
     async (req: RequestWithBody<CourseCreateModel>, res: Response<CourseType>) => {
 
@@ -52,7 +50,7 @@ export const getCoursesRoutes = (db: DBType) => {
   })
 
   router.put('/:id', 
-    titleValidation,
+    Validation,
     inputMiddlaleware,
     async (req: RequestWithParamsAndBody<URIParamsCourseIdModel, CourseUpdateModel>, res: Response) => {
     const id = +req.params.id;
@@ -79,7 +77,7 @@ export const getCoursesRoutes = (db: DBType) => {
       res.sendStatus(400);
       return;
     }
-    const isDeleted = await coursesRepository.deleteCourse(id, db)
+    const isDeleted = await coursesRepository.deleteOneCourse(id, db)
 
     if (!isDeleted) {
       res.sendStatus(404);
@@ -88,6 +86,17 @@ export const getCoursesRoutes = (db: DBType) => {
 
     res.sendStatus(204);
   })
+
+  router.delete('/', async(req,
+    res: Response)=> {
+      const isDeleted = await coursesRepository.deleteCourse(db);
+      
+      if (!isDeleted) {
+      res.sendStatus(404);
+      return;
+    }
+    res.sendStatus(204)
+    })
 
   return router
 }

@@ -1,6 +1,6 @@
 import { MongoClient } from 'mongodb';
 
-const mongoUri = process.env.mongoURI || "";
+const mongoUri = 'mongodb+srv://dbUser:dbUser@cluster0.dkayd4d.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0';
 export const client = new MongoClient(mongoUri);
 
 export const runDB = async() => {

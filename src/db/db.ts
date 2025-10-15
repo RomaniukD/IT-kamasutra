@@ -12,10 +12,10 @@ export type DBType = {courses: CourseType[], adresess: AdressType[]}
 
 export const db: DBType = {
   courses: [
-    {id: 1, title: 'Introduction to Programming', studentsCount: 12},
-    {id: 2, title: 'back-end', studentsCount: 12},
-    {id: 3, title: 'automation qa', studentsCount: 12},
-    {id: 4, title: 'devops', studentsCount: 12}
+    // {id: 1, title: 'Introduction to Programming', studentsCount: 12},
+    // {id: 2, title: 'back-end', studentsCount: 12},
+    // {id: 3, title: 'automation qa', studentsCount: 12},
+    // {id: 4, title: 'devops', studentsCount: 12}
   ],
   adresess: [
     {id:1, title: 'Nezaleznosti 21'},

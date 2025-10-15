@@ -7,7 +7,7 @@ describe('/', () => {
 
 beforeAll(async () => {
     await request(app)
-    .delete('/__test__/data')
+    .delete('/courses/')
     .expect(204);
   });
 
@@ -36,6 +36,7 @@ beforeAll(async () => {
       createdCourse1 = createResponse.body;
 
       expect(createdCourse1).toEqual({
+        _id: expect.any(String),
         id: expect.any(Number),
         title:'it-incubator',
         studentsCount: expect.any(Number)
@@ -58,6 +59,7 @@ beforeAll(async () => {
       createdCourse2 = createResponse.body;
 
       expect(createdCourse2).toEqual({
+        _id: expect.any(String),
         id: expect.any(Number),
         title:'it-incubator 2',
         studentsCount: expect.any(Number)

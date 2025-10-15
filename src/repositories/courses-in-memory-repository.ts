@@ -1,4 +1,4 @@
-import type { DBType, CourseType } from '../db/db.js';
+import { type DBType, type CourseType, db } from '../db/db.js';
 
 export const coursesRepository = {
     
@@ -32,7 +32,7 @@ export const coursesRepository = {
         
     },
 
-    async deleteCourse(id: Number, DB: DBType):Promise<boolean> {
+    async deleteOneCourse(id: Number, DB: DBType):Promise<boolean> {
 
         const currentCourse = DB.courses.findIndex(c => c.id === id)
         if (isNaN(currentCourse)) {
@@ -53,6 +53,11 @@ export const coursesRepository = {
             return false;
         }
 
-    }
+    },
+
+    async deleteCourse(db:DBType):Promise<boolean> {
+            db.courses = [];
+            return true
+        }
 }
 
